@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KRD Giełda Wierzytelności</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="./dist/bundle.js"></script>
+</head>
+<body>
+    <div class="container">
+        <a href="https://krd.pl/" target="_blank"><img src="https://krd.pl/images/krd.aspx" alt="Krajowy Rejestr Długów" /></a>
+    </div>
+    <div class="container">
+        <h1>Giełda Wierzytelności</h1>
+    </div>
+    <header class="top-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <form action="">
+                        <p class="text-white">PODAJ NUMER SPRAWY, NAZWĘ LUB NIP DŁUŻNIKA</p>
+                        <div class="input-wrap">
+                            <input required type="text" oninvalid="this.setCustomValidity('Pole nie może być puste')" oninput="setCustomValidity('')" /><button class="text-white border-0"><i class="fa fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="right col-6">
+                    <p class="text-white">CAŁKOWITA ILOŚĆ SPRAW: <span class="case-amount"></span></p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="main-content">
+        <div class="container">
+            <div class="single-case top">
+                <div class="row">
+                    <div class="col-5"><span>DŁUŻNIK</span></div>
+                    <div class="col-3"><span>NIP</span></div>
+                    <div class="col-4"><span>KWOTA ZADŁUŻENIA</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="idCase">
+        </div>
+    </section>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            $('#idCase').on('click', '.accordion-trigger', function(e) {
+                e.preventDefault();
+                var accordionContainer = $(this).closest('.accordion-container');
+                var accordionContent = $(this).parent().parent().find('.accordion-content');
+                if(accordionContainer.hasClass('active')) {
+                    accordionContainer.removeClass('active');
+                    accordionContent.hide();
+                } else {
+                    $('.accordion-container').removeClass('active');
+                    $('.accordion-content').hide();
+                    accordionContainer.addClass('active');
+                    accordionContent.css('display', 'flex');
+                }
+            });
+            $.getJSON('http://rekrutacja-webhosting.it.krd.pl/api/Recruitment/GetDebtsCount', function(data) {
+                $('.case-amount').append(data);
+            });
+            $.getJSON('http://rekrutacja-webhosting.it.krd.pl/api/Recruitment/GetTopDebts', function(data) {
+                $.each(data, function(indexData, valueData) {
+                    console.log(valueData);
+                    $('#idCase').append('<div class="single-case accordion-container">\n' +
+                        '                <div class="row">\n' +
+                        '                    <div class="col-5"><span>DŁUŻNIK</span>' + valueData.Name + '</div>\n' +
+                        '                    <div class="col-3"><span>NIP</span>' + valueData.NIP + '</div>\n' +
+                        '                    <div class="col-4"><span>KWOTA ZADŁUŻENIA</span>' + valueData.Value + '</div>\n' +
+                        '                    <a href="#" class="accordion-trigger"><span class="less">MNIEJ</span> <span class="more">WIĘCEJ</span></a>\n' +
+                        '                </div>\n' +
+                        '                <div class="row accordion-content" style="display: none">\n' +
+                        '                    <div class="col-5"><span>ADRES</span>' + valueData.Address + '</div>\n' +
+                        '                    <div class="col-3"><span>RODZAJ/TYP DOKUMENTU STANOWIĄCY PODSTAWĘ DLA WIERZYTELNOŚCI</span>' + valueData.DocumentType + '\n' +
+                        '                    </div>\n' +
+                        '                    <div class="col-2"><span>CENA ZADŁUŻENIA</span>' + valueData.Price + '</div>\n' +
+                        '                    <div class="col-2"><span>NUMER</span>' + valueData.Number + '</div>\n' +
+                        '                </div>\n' +
+                        '            </div>')
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>

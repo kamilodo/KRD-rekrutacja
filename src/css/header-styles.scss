@@ -1,0 +1,42 @@
+$kodo-main-colour: #003054;
+$kodo-secondary-colour: #e31c18;
+$kodo-secondary-hover: #F31C18;
+$kodo-bg-hover: #e2e2e2;
+$kodo-darker-bg: #f2f2f2;
+$kodo-input-height: 40px;
+$kodo-input-width: 40px;
+@mixin kodo-absolute-top-right {position: absolute; right: 0; top: 0}
+h1 {color: $kodo-main-colour; text-align: center; text-transform: uppercase;}
+header.top-header {padding: 30px; background: $kodo-main-colour}
+button {background: $kodo-secondary-colour; &:hover {background: $kodo-secondary-hover}; height: $kodo-input-height; width: $kodo-input-width; font-weight: 700; cursor: pointer; @include kodo-absolute-top-right;}
+.input-wrap {padding-right: $kodo-input-width; position: relative}
+input {height: $kodo-input-height; width: 100%; padding-left: 10px}
+.right {text-align: right}
+.case-amount {color: $kodo-secondary-colour}
+.main-content {
+  padding: 15px 0;
+  .container {padding: 0;}
+  .single-case {
+    border-bottom: 1px solid #bdbdbd;
+    line-height: 1.2rem;
+    position: relative;
+    .row {padding: 15px;}
+    &:nth-child(2n+2) {background: $kodo-darker-bg;}
+    &:hover {background: $kodo-bg-hover}
+    .accordion-content {display: none}
+    span {font-size: 0.8rem; color: $kodo-main-colour; display: none}
+    .accordion-trigger {color: $kodo-secondary-colour; margin: 15px; @include kodo-absolute-top-right;
+      span {color: inherit; line-height: inherit}
+      .more {display: block}
+    }
+  }
+  .single-case.active {
+    background: $kodo-bg-hover;
+    span {display: block}
+    .more {display: none}
+  }
+  .single-case.top {
+    background: #fff;
+    span {display: block}
+  }
+}
